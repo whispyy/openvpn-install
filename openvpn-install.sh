@@ -1153,6 +1153,19 @@ function newClient() {
 	echo "The configuration file has been written to $homeDir/$CLIENT.ovpn."
 	echo "Download the .ovpn file and import it in your OpenVPN client."
 
+ 	if [[ $WEBHOOK_URL != "" ]]; then
+		MESSAGE="OpenVPN client file"
+		FILE_PATH="$homeDir/$CLIENT.ovpn"
+		
+		# Send the message and file to the Discord webhook
+		curl -X POST -H "Content-Type: multipart/form-data" \
+		  -F "payload_json={\"content\":\"$MESSAGE\"};type=application/json" \
+		  -F "file=@$FILE_PATH" \
+		  $WEBHOOK_URL
+
+		echo "File sent to discord."
+	fi
+
 	exit 0
 }
 
